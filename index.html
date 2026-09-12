@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Industrial Lo-Fi</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0d0d;
+    color: #c8c8c8;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    padding: 8px 6px 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 6px 0 10px;
+    border-bottom: 1px solid #222;
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #e0e0e0;
+    font-weight: normal;
+  }
+  .header p {
+    font-size: 9px;
+    color: #444;
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 8px;
+    border: 1px solid #1e1e1e;
+    padding: 7px 7px 6px;
+  }
+  .section-label {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 6px;
+  }
+
+  /* ── Button rows ── */
+  .btn-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .btn-row:last-child { margin-bottom: 0; }
+
+  /* ── Buttons ── */
+  button {
+    flex: 1;
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    color: #b0b0b0;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 4px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  button:hover {
+    background: #1f1f1f;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+  button:active {
+    background: #282828;
+    border-color: #606060;
+    color: #fff;
+  }
+  button.wide { flex: 2; }
+  button.full { width: 100%; flex: none; }
+
+  /* ── Tri-X accent ── */
+  .section.triX { border-color: #2a2a2a; }
+  .section.triX .section-label { color: #888; letter-spacing: 2px; }
+  .section.triX button.full {
+    background: #1a1a1a;
+    border-color: #383838;
+    color: #d0d0d0;
+    letter-spacing: 3px;
+    padding: 7px 4px;
+    font-size: 10px;
+  }
+  .section.triX button.full:hover { background: #242424; border-color: #555; color: #fff; }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid #1a1a1a;
+    margin: 6px 0;
+  }
+
+  /* ── Slider row ── */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+  }
+  .slider-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: #555;
+    text-transform: uppercase;
+    width: 52px;
+    flex-shrink: 0;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 2px;
+    background: #2a2a2a;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background: #606060;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { background: #909090; }
+  .slider-val {
+    font-size: 9px;
+    color: #888;
+    width: 26px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ── Status bar ── */
+  #status {
+    margin-top: 8px;
+    padding: 4px 6px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #555;
+    border-top: 1px solid #1a1a1a;
+    min-height: 18px;
+  }
+  #status.ok  { color: #5a9a5a; }
+  #status.err { color: #9a4a4a; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Industrial Lo-Fi</h1>
+  <p>Photoshop — v1.0</p>
+</div>
+
+<!-- ── 1. TONALITY & CONTRAST ── -->
+<div class="section">
+  <div class="section-label">Tonality &amp; Contrast</div>
+  <div class="btn-row">
+    <button onclick="run('crushedNoir()')">Crushed Noir</button>
+    <button onclick="run('xeroxScan()')">Xerox Scan</button>
+  </div>
+</div>
+
+<!-- ── 2. COLOR GRADING ── -->
+<div class="section">
+  <div class="section-label">Color Grading</div>
+  <div class="btn-row">
+    <button onclick="run('silverGelatin()')">Silver Gelatin</button>
+    <button onclick="run('toxicCyan()')">Toxic Cyan</button>
+  </div>
+</div>
+
+<!-- ── 3. TEXTURE & DEGRADATION ── -->
+<div class="section">
+  <div class="section-label">Texture &amp; Degradation</div>
+  <div class="slider-row">
+    <span class="slider-label">Grain</span>
+    <input type="range" id="grainSlider" min="0" max="100" value="40"
+           oninput="document.getElementById('grainVal').textContent = this.value">
+    <span class="slider-val" id="grainVal">40</span>
+    <button style="flex:none;width:52px" onclick="applyGrainFromSlider()">Apply</button>
+  </div>
+  <div class="btn-row">
+    <button onclick="run('cctvPixelate()')">CCTV Pixelate</button>
+    <button onclick="run('unsharpArtifacts()')">Unsharp Artifacts</button>
+  </div>
+</div>
+
+<!-- ── 4. OPTICS & MOTION ── -->
+<div class="section">
+  <div class="section-label">Optics &amp; Motion</div>
+  <div class="btn-row">
+    <button onclick="run('directFlash()')">Direct Flash</button>
+    <button onclick="run('shutterDrag()')">Shutter Drag</button>
+  </div>
+  <div class="btn-row">
+    <button onclick="run('rgbSplit()')">RGB Split</button>
+    <button onclick="run('solarizeThermal()')">Solarize Thermal</button>
+  </div>
+</div>
+
+<!-- ── AUS TAYLOR / TRI-X ── -->
+<div class="section triX">
+  <div class="section-label">Aus Taylor &mdash; Tri-X</div>
+
+  <hr class="divider">
+
+  <!-- GRAIN GROUP -->
+  <div class="slider-row">
+    <span class="slider-label">Grain</span>
+    <input type="range" id="atGrain" min="0" max="100" value="70"
+           oninput="document.getElementById('atGrainV').textContent=this.value">
+    <span class="slider-val" id="atGrainV">70</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Grain Size</span>
+    <input type="range" id="atGrainSize" min="0" max="100" value="45"
+           oninput="document.getElementById('atGrainSizeV').textContent=this.value">
+    <span class="slider-val" id="atGrainSizeV">45</span>
+  </div>
+
+  <hr class="divider">
+
+  <!-- TONE GROUP -->
+  <div class="slider-row">
+    <span class="slider-label">Blacks</span>
+    <input type="range" id="atBlacks" min="0" max="100" value="60"
+           oninput="document.getElementById('atBlacksV').textContent=this.value">
+    <span class="slider-val" id="atBlacksV">60</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Highlights</span>
+    <input type="range" id="atHighlights" min="0" max="100" value="65"
+           oninput="document.getElementById('atHighlightsV').textContent=this.value">
+    <span class="slider-val" id="atHighlightsV">65</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Midtones</span>
+    <input type="range" id="atMids" min="-50" max="50" value="8"
+           oninput="document.getElementById('atMidsV').textContent=this.value">
+    <span class="slider-val" id="atMidsV">8</span>
+  </div>
+
+  <hr class="divider">
+
+  <!-- OPTICS GROUP -->
+  <div class="slider-row">
+    <span class="slider-label">Softness</span>
+    <input type="range" id="atSoftness" min="0" max="100" value="25"
+           oninput="document.getElementById('atSoftnessV').textContent=this.value">
+    <span class="slider-val" id="atSoftnessV">25</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Warmth</span>
+    <input type="range" id="atWarmth" min="0" max="100" value="15"
+           oninput="document.getElementById('atWarmthV').textContent=this.value">
+    <span class="slider-val" id="atWarmthV">15</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Vignette</span>
+    <input type="range" id="atVignette" min="0" max="100" value="25"
+           oninput="document.getElementById('atVignetteV').textContent=this.value">
+    <span class="slider-val" id="atVignetteV">25</span>
+  </div>
+
+  <hr class="divider">
+
+  <!-- B&W CHANNEL MIX (Tri-X film response) -->
+  <div class="slider-row">
+    <span class="slider-label">Reds</span>
+    <input type="range" id="atReds" min="-200" max="200" value="45"
+           oninput="document.getElementById('atRedsV').textContent=this.value">
+    <span class="slider-val" id="atRedsV">45</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Yellows</span>
+    <input type="range" id="atYellows" min="-200" max="200" value="50"
+           oninput="document.getElementById('atYellowsV').textContent=this.value">
+    <span class="slider-val" id="atYellowsV">50</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Greens</span>
+    <input type="range" id="atGreens" min="-200" max="200" value="30"
+           oninput="document.getElementById('atGreensV').textContent=this.value">
+    <span class="slider-val" id="atGreensV">30</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">Blues</span>
+    <input type="range" id="atBlues" min="-200" max="200" value="15"
+           oninput="document.getElementById('atBluesV').textContent=this.value">
+    <span class="slider-val" id="atBluesV">15</span>
+  </div>
+
+  <hr class="divider">
+  <button class="full" onclick="applyAusTaylor()">&#9651; &nbsp; TRI-X &nbsp; &#9651;</button>
+</div>
+
+<div id="status">Ready</div>
+
+<script src="js/CSInterface.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
